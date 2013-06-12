@@ -16,8 +16,8 @@ def global_stats(request):
         s['average_time'] = s['time'] / s['count']
     return render_to_response('profiler/index.html',
                               {'queries' : stats,
-+                               'STATIC_URL' : settings.STATIC_URL,
-+                              },
+                                'STATIC_URL' : settings.STATIC_URL,
+                              },
                               context_instance=RequestContext(request))
 
 @user_passes_test(lambda u:u.is_superuser)
@@ -46,8 +46,8 @@ def stats_by_view(request):
     return render_to_response('profiler/by_view.html',
                               {'queries' : grouped,
                                'stats' :simplejson.dumps(stats),
-+                               'STATIC_URL' : settings.STATIC_URL,
-+                              },
+                                'STATIC_URL' : settings.STATIC_URL,
+                               },
                               context_instance=RequestContext(request))
 
 @user_passes_test(lambda u:u.is_superuser)
@@ -58,8 +58,8 @@ def reset(request):
         return HttpResponseRedirect(next)
     return render_to_response('profiler/reset.html',
                               {'next' : next,
-+                               'STATIC_URL' : settings.STATIC_URL,
-+                              },
+                                'STATIC_URL' : settings.STATIC_URL,
+                               },
                               context_instance=RequestContext(request))
 
 
@@ -69,6 +69,6 @@ def python_stats(request):
     stats = get_client().select(group_by=['file','lineno'], where={'type':'python'})
     return render_to_response('profiler/code.html',
                               {'stats' : stats,
-+                               'STATIC_URL' : settings.STATIC_URL,
-+                              },
+                                'STATIC_URL' : settings.STATIC_URL,
+                               },
                               context_instance=RequestContext(request))
