@@ -5,6 +5,7 @@ from django.core.cache import cache
 from django.contrib.auth.decorators import user_passes_test
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
+from django.conf import settings
 
 from aggregate.client import get_client
 
@@ -14,7 +15,9 @@ def global_stats(request):
     for s in stats:
         s['average_time'] = s['time'] / s['count']
     return render_to_response('profiler/index.html',
-                              {'queries' : stats},
+                              {'queries' : stats,
++                               'STATIC_URL' : settings.STATIC_URL,
++                              },
                               context_instance=RequestContext(request))
 
 @user_passes_test(lambda u:u.is_superuser)
@@ -42,7 +45,9 @@ def stats_by_view(request):
            
     return render_to_response('profiler/by_view.html',
                               {'queries' : grouped,
-                               'stats' :simplejson.dumps(stats)},
+                               'stats' :simplejson.dumps(stats),
++                               'STATIC_URL' : settings.STATIC_URL,
++                              },
                               context_instance=RequestContext(request))
 
 @user_passes_test(lambda u:u.is_superuser)
@@ -52,7 +57,9 @@ def reset(request):
         get_client().clear()
         return HttpResponseRedirect(next)
     return render_to_response('profiler/reset.html',
-                              {'next' : next},
+                              {'next' : next,
++                               'STATIC_URL' : settings.STATIC_URL,
++                              },
                               context_instance=RequestContext(request))
 
 
@@ -61,5 +68,7 @@ def reset(request):
 def python_stats(request):
     stats = get_client().select(group_by=['file','lineno'], where={'type':'python'})
     return render_to_response('profiler/code.html',
-                              {'stats' : stats},
+                              {'stats' : stats,
++                               'STATIC_URL' : settings.STATIC_URL,
++                              },
                               context_instance=RequestContext(request))
